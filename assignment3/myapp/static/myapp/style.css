@@ -1,0 +1,18 @@
+body{
+    background-color: bisque;
+    color: darkgreen;
+   }
+   a{
+    color: darkcyan;
+   }
+   h1{
+    background-color: #c0bdbd;
+    font-size: 30px;
+    color: brown;
+    font-style: italic;
+    position: center;
+   }
+   .hbar1 {
+    display: inline;
+    margin: 15px;
+   }

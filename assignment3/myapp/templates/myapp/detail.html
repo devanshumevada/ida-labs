@@ -1,0 +1,17 @@
+{% extends 'myapp/base.html' %}
+{% block title %}
+    Details
+{% endblock %}
+{% block body_block %}
+    <p><b>Topic:</b> {{ topic.name }} </p>
+    <p><b>Category:</b> {{ topic.category }}</p>
+
+    <ul>
+        {% for course in courses %}  
+        
+        <li>{{course.name}}</li>
+        
+        {% endfor %}
+    </ul>
+{#    <p><a href="{% url 'myapp:index' %}">Go Back</a></p> #}
+{% endblock %}
