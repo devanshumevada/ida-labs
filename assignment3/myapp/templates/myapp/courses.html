@@ -1,0 +1,15 @@
+{% extends 'myapp/base.html' %}
+{% block title %}
+    Courses
+{% endblock %}
+{% block body_block %}
+   <ul>
+    <h3>List of Courses: </h1>
+    {% for course in courlist %}
+
+    <li>{{course.name}}</li>
+
+    {% endfor %}
+    </ul>
+   <a href="/myapp/place_order">Purchase Course</a>
+{% endblock %}

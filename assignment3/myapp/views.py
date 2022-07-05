@@ -1,5 +1,6 @@
 from django.http  import HttpResponse
 from .models import Topic, Course, Student, Order
+
 from django.shortcuts import get_object_or_404, render
 # Create your views here.
 # Create your views here.
@@ -15,4 +16,9 @@ def about(request):
 def detail(request, top_no):
     topic = get_object_or_404(Topic, pk=top_no)
     courses = Course.objects.filter(topic=topic)
-    return render(request, 'myapp/detail.html', {'topic': topic, 'courses': courses})   
+    return render(request, 'myapp/detail.html', {'topic': topic, 'courses': courses})  
+
+
+def courses(request): 
+    courlist = Course.objects.all().order_by('id') 
+    return render(request, 'myapp/courses.html', {'courlist': courlist}) 

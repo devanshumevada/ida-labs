@@ -2,6 +2,7 @@ from django.db import models
 import datetime
 from django.contrib.auth.models import User
 from django.utils import timezone
+from decimal import *
 
 # Create your models here.
 class Topic(models.Model):
@@ -12,6 +13,8 @@ class Topic(models.Model):
       return self.name
 
 class Course(models.Model):
+    interested = models.PositiveIntegerField(default=0)
+    stages = models.PositiveIntegerField(default=3)
     topic = models.ForeignKey(Topic, related_name='courses', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10,decimal_places=2)
@@ -21,6 +24,16 @@ class Course(models.Model):
     def __str__(self):
         #return f"{self.name}'s costs {self.price} and it {'is' if {self.for_everyone} else 'not'} for everyone"
         return self.name
+
+   
+    def discount(self):
+        discount_to_apply = self.price * Decimal(0.1)  
+        self.price  = self.price - discount_to_apply
+        self.save()
+             
+
+
+
 
 class Student(User):
     CITY_CHOICES = [('WS', 'Windsor'), ('CG', 'Calgery'),('MR', 'Montreal'), ('VC', 'Vancouver')]
