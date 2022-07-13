@@ -29,7 +29,8 @@ class Course(models.Model):
     def discount(self):
         discount_to_apply = self.price * Decimal(0.1)  
         self.price  = self.price - discount_to_apply
-        self.save()
+        self.save() 
+        #return self.price
              
 
 

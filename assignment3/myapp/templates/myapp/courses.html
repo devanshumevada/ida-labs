@@ -7,7 +7,7 @@
     <h3>List of Courses: </h1>
     {% for course in courlist %}
 
-    <li>{{course.name}}</li>
+    <li><a href="{% url 'myapp:course_detail' course.id %}">{{course.name}}</a></li>
 
     {% endfor %}
     </ul>

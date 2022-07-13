@@ -1,0 +1,20 @@
+{% extends 'myapp/base.html' %}
+{% block title %}
+    Course Details
+{% endblock %}
+{% block body_block %}
+    <p><b>Name:</b> {{ course_info.name }} </p>
+    <p><b>Number of People Interested:</b> {{ course_info.interested }}</p>
+    <p><b>Price:</b> {{ course_info.price }} </p>
+
+    {% if course_info.for_everyone %}
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit"/>
+        </form>
+    {% else %}
+        <p> Unfortunately, this course is not for everyone </p>
+    {% endif %}
+    <p> {{ msg }}</p>
+{% endblock %}
