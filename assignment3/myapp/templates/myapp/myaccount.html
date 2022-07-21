@@ -1,0 +1,39 @@
+{% extends 'myapp/base.html' %}
+{% block title %}
+    My Account
+{% endblock %}
+{% block body_block %}
+    {% if is_student %}
+    <h2>Welcome: {{request.user.first_name}} {{request.user.last_name}}</h2></h2>
+    {% else %}
+    <h2>You're not a registered student</h2>
+    {% endif %}
+
+    {% if orders %}
+    <h2>Orders: </h2>
+    <ul>
+    {% for order in orders %}
+
+    <li><h4>{{order.course.name}} - {{order.order_date}}</h4>
+    
+    </li>
+
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if topics %}
+    <h2>Topics Interested In: </h2>
+    <ul>
+    {% for topic in topics %}
+
+    <li><h4>{{topic.name}}</h4>
+    
+    </li>
+
+    {% endfor %}
+    </ul>
+    {% endif %}
+    
+{#    <p><a href="{% url 'myapp:index' %}">Go Back</a></p> #}
+{% endblock %}

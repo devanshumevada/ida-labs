@@ -1,8 +1,10 @@
 from django.shortcuts import get_object_or_404, render, redirect
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
 from .models import Topic, Course, Student, Order
 from .forms import OrderForm, InterestForm
-
-from django.shortcuts import get_object_or_404, render
+from django.contrib.auth import authenticate, login, logout 
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 # Create your views here.
 def index(request):
@@ -59,3 +61,51 @@ def course_detail(request, cour_id):
     else:
         form = InterestForm()
     return render(request, 'myapp/course_detail.html', {'msg': msg, 'course_info': course, 'form': form})
+
+
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        #print(f'Username: {username})
+        
+        user = authenticate(username=username, password=password) 
+        if user:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('myapp:index'))
+            else:
+                return HttpResponse('Your account is disabled.')
+        
+        else:return HttpResponse('Invalid login details.') 
+    else:
+        return render(request, 'myapp/login.html')
+    
+    
+        
+        
+@login_required
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse(('myapp:index')))
+
+@login_required(login_url='/myapp/login/') 
+def myaccount(request):
+    username = request.user.username 
+    try:   
+        user = Student.objects.filter(username=username)
+    except: 
+        user = None
+    is_student = False
+    orders = None 
+    if user:
+        is_student = True
+        orders = Order.objects.filter(student=user[0])
+        topics = Student.objects.get(username=username).interested_in.values()
+        #print(orders)    
+        #print(topics)
+        return render(request, 'myapp/myaccount.html', {'is_student': is_student, 'orders': orders, 'topics': topics})
+    
+    return render(request, 'myapp/myaccount.html', {'is_student':is_student})
+
