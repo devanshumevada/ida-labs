@@ -5,15 +5,26 @@ from .models import Topic, Course, Student, Order
 from .forms import OrderForm, InterestForm
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 # Create your views here.
 # Create your views here.
 def index(request):
     top_list = Topic.objects.all().order_by('id')[:10]
-    return render(request, 'myapp/index.html', {'top_list': top_list})
+    if 'last_login' in request.session:
+        last_login = request.session['last_login']
+    else:
+        last_login = 'Your last login was more than one hour ago'
+    return render(request, 'myapp/index.html', {'top_list': top_list, 'last_login': last_login})
 
 
 def about(request):
-   return render(request, 'myapp/about.html')
+    if 'about_visits' in request.session:
+        request.session['about_visits'] += 1
+    else:
+        request.session['about_visits'] = 1
+        request.session.set_expiry(300)
+
+    return render(request, 'myapp/about.html', {'about_visits': request.session['about_visits']})
 
 
 def detail(request, top_no):
@@ -66,6 +77,11 @@ def course_detail(request, cour_id):
 
 def user_login(request):
     if request.method == 'POST':
+        if request.session.test_cookie_worked():
+            request.session.delete_test_cookie()
+            print("Cookie Working")
+        else:
+            print("Not Working Cookie")
         username = request.POST['username']
         password = request.POST['password']
         #print(f'Username: {username})
@@ -74,12 +90,15 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
+                request.session['last_login'] = str(datetime.now())
+                request.session.set_expiry(0)
                 return HttpResponseRedirect(reverse('myapp:index'))
             else:
                 return HttpResponse('Your account is disabled.')
         
         else:return HttpResponse('Invalid login details.') 
     else:
+        request.session.set_test_cookie()
         return render(request, 'myapp/login.html')
     
     
@@ -87,8 +106,9 @@ def user_login(request):
         
 @login_required
 def user_logout(request):
-    logout(request)
-    return HttpResponseRedirect(reverse(('myapp:index')))
+    for key in list(request.session.keys()):
+        del request.session[key]
+    return HttpResponseRedirect(reverse('myapp:index'))
 
 @login_required(login_url='/myapp/login/') 
 def myaccount(request):
