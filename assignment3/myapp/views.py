@@ -99,7 +99,9 @@ def user_login(request):
         else:return HttpResponse('Invalid login details.') 
     else:
         request.session.set_test_cookie()
-        return render(request, 'myapp/login.html')
+        username_to_fill = request.GET.get('username', None) 
+        print(username_to_fill)
+        return render(request, 'myapp/login.html', {'username_to_fill': username_to_fill})
     
     
         
@@ -128,4 +130,37 @@ def myaccount(request):
         return render(request, 'myapp/myaccount.html', {'is_student': is_student, 'orders': orders, 'topics': topics})
     
     return render(request, 'myapp/myaccount.html', {'is_student':is_student})
+
+
+def register_student(request):
+
+    if request.method == 'POST':
+
+
+        username = request.POST['username']
+        password = request.POST['password']
+
+
+        try:
+            student = get_object_or_404(Student, username=username)
+        except:     
+            student = None
+
+        if not username or not password:
+            return render(request, 'myapp/register.html', {'error_message': 'Eithe username or password or both have not been passed'})
+
+        if student:
+            return render(request, 'myapp/register.html', {'error_message': 'User already exists with the given username'})
+
+        
+        student = Student.objects.create_user(username=username, password=password)
+        student.first_name = username     
+        student.save()
+
+        return redirect(reverse('myapp:login') + f'?username={username}')
+
+
+
+
+    return render(request, 'myapp/register.html')
 

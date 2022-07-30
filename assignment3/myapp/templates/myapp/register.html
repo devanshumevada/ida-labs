@@ -1,14 +1,20 @@
 {% extends 'myapp/base.html' %}
 {% block title %}
-    Login
+    Register
 {% endblock %}
 {% block body_block %}
-    <h2>Login</h2>
-   <form action="{% url 'myapp:login' %}" method="POST">
+    <h2>Register</h2>
+
+    {% if error_message %} 
+    
+    <h2>{{error_message}}</h2>
+
+    {% else %}
+   <form action="{% url 'myapp:register' %}" method="POST">
     {% csrf_token %}
     <p>
         <label for="username">Username</label>
-        <input type="text" name="username" id="username" class="username" value="{{username_to_fill|default_if_none:''}}" /> 
+        <input type="text" name="username" id="username" class="username" /> 
     </p>
 
     <p>
@@ -21,5 +27,6 @@
     </p>
    </form>
     </ul>
+    {% endif %}
 {#    <p><a href="{% url 'myapp:index' %}">Go Back</a></p> #}
 {% endblock %}
