@@ -23,7 +23,7 @@
 
 {% else %}  
     <a href="{% url 'myapp:logout' %}">Logout</a>
-    <h1>{% block myhdg %}Hello {{request.user.username}} {% endblock %}</h1>
+    <h1>{% block myhdg %}Hello {{request.user.first_name}} {% endblock %}</h1>
 {% endif %}
 
 
