@@ -84,6 +84,7 @@ def user_login(request):
             print("Not Working Cookie")
         username = request.POST['username']
         password = request.POST['password']
+        next = request.POST.get('next',None)
         #print(f'Username: {username})
         
         user = authenticate(username=username, password=password) 
@@ -91,8 +92,11 @@ def user_login(request):
             if user.is_active:
                 login(request, user)
                 request.session['last_login'] = str(datetime.now())
-                request.session.set_expiry(0)
-                return HttpResponseRedirect(reverse('myapp:index'))
+                request.session.set_expiry(0) 
+                if not next:
+                    return HttpResponseRedirect(reverse('myapp:index'))
+                
+                return HttpResponseRedirect(next)
             else:
                 return HttpResponse('Your account is disabled.')
         
