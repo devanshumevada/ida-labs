@@ -3,3 +3,5 @@
 .DS_Store
 .DS_Store
 assignment3/myapp/.DS_Store
+assignment3/test.db
+assignment3/myapp/fixtures/db.json
