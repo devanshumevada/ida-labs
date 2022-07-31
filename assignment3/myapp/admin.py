@@ -14,7 +14,7 @@ class TopicAdmin(admin.ModelAdmin):
 
     inlines = [CourseInline]
 
-    
+
 
 @admin.action(description="Apply 10 percent discount on the price")    
 def apply_discount(modeladmin, request, queryset):

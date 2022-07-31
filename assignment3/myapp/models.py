@@ -61,3 +61,6 @@ class Order(models.Model):
     def total_cost(self):
         all_price = [price for price in self.course.price]
         return sum(all_price)
+
+    def get_order_status_verbose(self):
+        return dict(self.ORDER_CHOICE)[self.order_status]

@@ -6,8 +6,8 @@ from .forms import OrderForm, InterestForm
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-# Create your views here.
-# Create your views here.
+
+
 def index(request):
     top_list = Topic.objects.all().order_by('id')[:10]
     if 'last_login' in request.session:
@@ -106,7 +106,7 @@ def user_login(request):
     
         
         
-@login_required
+@login_required(login_url='/myapp/login/')
 def user_logout(request):
     for key in list(request.session.keys()):
         del request.session[key]
@@ -163,4 +163,22 @@ def register_student(request):
 
 
     return render(request, 'myapp/register.html')
+
+
+@login_required(login_url='/myapp/login/')
+def myorders(request):
+    try: 
+        student = Student.objects.get(username=request.user.username)
+    except Student.DoesNotExist:
+        student = None
+
+    if not student:   
+        return render(request, 'myapp/myorders.html', {'error_message':'You are not a registered student'})
+
+    orders = Order.objects.filter(student=student) 
+    if not orders:
+        print('Inside')
+        return render(request, 'myapp/myorders.html', {'error_message': 'You do not have any orders'})      
+    return render(request, 'myapp/myorders.html', {'orders':orders})   
+
 

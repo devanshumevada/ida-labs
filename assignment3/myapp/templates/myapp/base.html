@@ -16,7 +16,7 @@
 
 <div>
 
-<h1>{% block myhdg %}Hello Nirja,Devanshu,Manan {% endblock %}</h1>
+<h1>{% block myhdg %}Hello {{request.user.username}} {% endblock %}</h1>
 
 {% block body_block %}*** {% endblock %}
 
