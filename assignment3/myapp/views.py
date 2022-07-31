@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from .models import Topic, Course, Student, Order
-from .forms import OrderForm, InterestForm
+from .forms import OrderForm, InterestForm, ProfilePictureUploadForm
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
@@ -123,15 +123,25 @@ def myaccount(request):
         user = Student.objects.filter(username=username)
     except: 
         user = None
+
+    if request.method == 'POST':
+        profile_picture_upload_form = ProfilePictureUploadForm(request.POST, request.FILES, instance=user[0])
+        if profile_picture_upload_form.is_valid():
+            profile_picture_upload_form.save()
+
+        return redirect('myapp:myaccount')
+
+   
     is_student = False
     orders = None 
     if user:
         is_student = True
         orders = Order.objects.filter(student=user[0])
         topics = Student.objects.get(username=username).interested_in.values()
+        profile_picture_upload_form = ProfilePictureUploadForm(instance=user[0])
         #print(orders)    
         #print(topics)
-        return render(request, 'myapp/myaccount.html', {'is_student': is_student, 'orders': orders, 'topics': topics})
+        return render(request, 'myapp/myaccount.html', {'user':user[0],'is_student': is_student, 'orders': orders, 'topics': topics, 'form':profile_picture_upload_form})
     
     return render(request, 'myapp/myaccount.html', {'is_student':is_student})
 
@@ -158,7 +168,7 @@ def register_student(request):
 
         
         student = Student.objects.create_user(username=username, password=password)
-        student.first_name = username     
+        student.first_name = username  
         student.save()
 
         return redirect(reverse('myapp:login') + f'?username={username}')
@@ -184,5 +194,11 @@ def myorders(request):
         print('Inside')
         return render(request, 'myapp/myorders.html', {'error_message': 'You do not have any orders'})      
     return render(request, 'myapp/myorders.html', {'orders':orders})   
+
+
+@login_required(login_url='/myapp/login/')
+def handle_image_upload(request):    
+    if request.method == 'POST':  
+        pass
 
 

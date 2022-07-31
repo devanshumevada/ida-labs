@@ -1,6 +1,6 @@
 from django import forms
 
-from myapp.models import Order
+from myapp.models import Order, Student
 
 
 class InterestForm(forms.Form):
@@ -16,3 +16,9 @@ class OrderForm(forms.ModelForm):
             'student': forms.RadioSelect(),
             'order_date': forms.SelectDateWidget()
         }
+
+
+class ProfilePictureUploadForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ['profile_picture']

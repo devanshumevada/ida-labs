@@ -1,10 +1,16 @@
 {% extends 'myapp/base.html' %}
+{% load static %}
 {% block title %}
     My Account
 {% endblock %}
 {% block body_block %}
     {% if is_student %}
-    <h2>Welcome: {{request.user.first_name}} {{request.user.last_name}}</h2></h2>
+    <h2>Welcome: {{request.user.first_name}} - {{request.user.last_name}}</h2></h2>
+    {% if not user.profile_picture %}
+    <img height="200px" width="200px" src="/media/profile_pictures/default_profile_picture.jpeg" alt="">
+    {% else %}
+    <img height="200px" width="200px" src="{{user.profile_picture.url}}" alt="">
+    {% endif %}
     {% else %}
     <h2>You're not a registered student</h2>
     {% endif %}
@@ -34,6 +40,13 @@
     {% endfor %}
     </ul>
     {% endif %}
+
+    <h2>Set or Update Profile Picture: </h2>
+    <form action="{% url 'myapp:myaccount' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit">
+    </form>
     
 {#    <p><a href="{% url 'myapp:index' %}">Go Back</a></p> #}
 {% endblock %}
