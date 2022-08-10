@@ -17,4 +17,5 @@ urlpatterns = [
     path(r'myaccount/', views.myaccount, name='myaccount'),
     path(r'register/', views.register_student, name='register'),
     path(r'myorders/', views.myorders, name='myorders'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path(r'forgot_password/', views.forgot_password, name='forgot_password'),
+] 

@@ -19,6 +19,7 @@ class OrderForm(forms.ModelForm):
 
 
 class ProfilePictureUploadForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(), required=False)
     class Meta:
         model = Student
-        fields = ['profile_picture']
+        fields = ['profile_picture', 'first_name', 'last_name', 'username']

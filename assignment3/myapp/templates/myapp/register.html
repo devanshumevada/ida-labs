@@ -12,14 +12,19 @@
     {% else %}
    <form action="{% url 'myapp:register' %}" method="POST">
     {% csrf_token %}
+
+    <p>
+        <label for="email">Email</label>
+        <input type="text" name="email" id="email" class="email" required /> 
+    </p>
     <p>
         <label for="username">Username</label>
-        <input type="text" name="username" id="username" class="username" /> 
+        <input type="text" name="username" id="username" class="username" required /> 
     </p>
 
     <p>
         <label for="password">Password</label>
-        <input type="password" name="password" id="password" class="password" />
+        <input type="password" name="password" id="password" class="password" required />
     </p>
 
     <p>

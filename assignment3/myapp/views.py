@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -5,6 +6,8 @@ from .models import Topic, Course, Student, Order
 from .forms import OrderForm, InterestForm, ProfilePictureUploadForm
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.conf import settings
 from datetime import datetime
 
 
@@ -102,6 +105,8 @@ def user_login(request):
         
         else:return HttpResponse('Invalid login details.') 
     else:
+        if request.user.is_authenticated:
+            return redirect('myapp:index')
         request.session.set_test_cookie()
         username_to_fill = request.GET.get('username', None) 
         print(username_to_fill)
@@ -126,8 +131,12 @@ def myaccount(request):
 
     if request.method == 'POST':
         profile_picture_upload_form = ProfilePictureUploadForm(request.POST, request.FILES, instance=user[0])
+        password = request.POST['password']
         if profile_picture_upload_form.is_valid():
-            profile_picture_upload_form.save()
+            user_object = profile_picture_upload_form.save()
+            if password: 
+                user_object.set_password(password)
+                user_object.save()
 
         return redirect('myapp:myaccount')
 
@@ -153,6 +162,7 @@ def register_student(request):
 
         username = request.POST['username']
         password = request.POST['password']
+        email = request.POST['email']
 
 
         try:
@@ -161,13 +171,13 @@ def register_student(request):
             student = None
 
         if not username or not password:
-            return render(request, 'myapp/register.html', {'error_message': 'Eithe username or password or both have not been passed'})
+            return render(request, 'myapp/register.html', {'error_message': 'Either username or password or both have not been passed'})
 
         if student:
             return render(request, 'myapp/register.html', {'error_message': 'User already exists with the given username'})
 
         
-        student = Student.objects.create_user(username=username, password=password)
+        student = Student.objects.create_user(username=username, password=password, email=email)
         student.first_name = username  
         student.save()
 
@@ -175,7 +185,8 @@ def register_student(request):
 
 
 
-
+    if request.user.is_authenticated:
+        return redirect('myapp:index')
     return render(request, 'myapp/register.html')
 
 
@@ -201,4 +212,31 @@ def handle_image_upload(request):
     if request.method == 'POST':  
         pass
 
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        student = Student.objects.get(email=email)
+
+        if student: 
+            random_password = Student.objects.make_random_password()   
+            print(random_password)    
+            student.set_password(random_password)
+            student.save()
+            send_mail(
+                
+                subject=f'{student.first_name}: Here is your new password', 
+                message=f'Your new password is: {random_password}. Please change your password from myaccount page',
+                from_email = "dm.25041998@gmail.com" ,
+                recipient_list=[student.email,],
+                fail_silently=False
+            
+            )
+
+        return  redirect('myapp:login')
+
+
+
+        
+    return render(request, 'myapp/forgot_password.html')
 
