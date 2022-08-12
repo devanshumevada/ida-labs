@@ -16,3 +16,13 @@ body{
     display: inline;
     margin: 15px;
    }
+
+   .footer_list {
+    list-style: none;
+    float: right;
+   }
+
+   .footer_list li {
+    float: left;
+   }
+

@@ -1,4 +1,3 @@
-import re
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -220,7 +219,7 @@ def forgot_password(request):
 
         if student: 
             random_password = Student.objects.make_random_password()   
-            print(random_password)    
+            #print(random_password)    
             student.set_password(random_password)
             student.save()
             send_mail(

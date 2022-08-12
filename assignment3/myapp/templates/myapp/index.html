@@ -3,16 +3,35 @@
 {% block body_block %}
 
 {% if top_list %}
- <h2>List of Topics</h2>
- <ol>
+ <h2 align="center">List of Topics</h2>
+ <div class="row">
  {% for top in top_list %}
- <li> <a href="{% url 'myapp:detail' top.id %}">{{ top.name}}</a></li>
+
+ <div class="card text-center col-md-4 text-dark" style="max-width: 40%;">
+    <div class="card-header">
+      {{top.name}}
+    </div>
+    <div class="card-body">
+      <a href="{% url 'myapp:detail' top.id %}" class="btn btn-success">More Details</a>
+    </div>
+    <div class="card-footer text-muted">
+      Category: <strong>{{top.category}}</strong>
+    </div>
+  </div>
+ 
+    
+   
+
  {% endfor %}
- </ol>
+ </div>
+ 
  {% else %}
  <strong>There are no available topics!</strong>
  {% endif %}
 
- <h6>Last Login: {{last_login}}</h6>
+<br /> 
+{% if request.user.is_authenticated %}
+<h6>Last Login: {{last_login}}</h6>
+{% endif %}
 
 {% endblock %}

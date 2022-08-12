@@ -3,13 +3,26 @@
     Courses
 {% endblock %}
 {% block body_block %}
-   <ul>
-    <h3>List of Courses: </h1>
+    <h3 align="center">List of Courses: </h1>
+    <div class="row">
     {% for course in courlist %}
 
-    <li><a href="{% url 'myapp:course_detail' course.id %}">{{course.name}}</a></li>
+    <div class="card text-center col-md-4 text-dark">
+        <div class="card-header">
+          {{course.name}}
+        </div>
+        <div class="card-body">
+          <a href="{% url 'myapp:course_detail' course.id %}" class="btn btn-success">More Details</a>
+        </div>
+        <div class="card-footer text-muted">
+          Price: <strong>{{course.price}}</strong>
+        </div>
+      </div>
+
 
     {% endfor %}
-    </ul>
-   <a href="/myapp/place_order">Purchase Course</a>
+    </div>
+    <br />
+    <br />
+   <a class="btn btn-primary" href="/myapp/place_order">Purchase Course</a>
 {% endblock %}
