@@ -1,19 +1,25 @@
 {% extends 'myapp/base.html' %}
+{% load crispy_forms_filters %}
+% load crispy_forms_tags %}
 {% block title %}
     Place Order
 {% endblock %}
 {% block body_block %}
+
+    <h2 align="center">Place Order</h2>
+    <br />
     <ul>
         {% for course in courlist %}
             <li>{{ course.name }} = ${{ course.price }}</li>
         {% endfor %}
     </ul>
-
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Submit"/>
-    </form>
+    <div class="place_order_form" style="max-width:900px; margin: auto;">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form| crispy }}
+            <input class="btn btn-primary" type="submit" value="Submit"/>
+        </form>
+    </div>
     
     <p> {{ msg }}</p>
 {% endblock %}

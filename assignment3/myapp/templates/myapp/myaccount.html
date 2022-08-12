@@ -1,33 +1,57 @@
 {% extends 'myapp/base.html' %}
+{% load crispy_forms_filters %}
+% load crispy_forms_tags %}
 {% load static %}
 {% block title %}
     My Account
 {% endblock %}
 {% block body_block %}
     {% if is_student %}
-    <h2>Welcome: {{request.user.first_name}} - {{request.user.last_name}}</h2></h2>
-    {% if not user.profile_picture %}
-    <img height="200px" width="200px" src="/media/profile_pictures/default_profile_picture.jpeg" alt="">
-    {% else %}
-    <img height="200px" width="200px" src="{{user.profile_picture.url}}" alt="">
-    {% endif %}
+    <h2>Welcome: {{request.user.first_name}}  {{request.user.last_name}}</h2></h2>
+    <div class="row">
+        <div class="col-md-3">
+        {% if not user.profile_picture %}
+        <img height="200px" width="200px" src="/media/profile_pictures/default_profile_picture.jpeg" alt="">
+        {% else %}
+        <img height="200px" width="200px" src="{{user.profile_picture.url}}" alt="">
+        {% endif %}
+        </div>
+    </div>
     {% else %}
     <h2>You're not a registered student</h2>
     {% endif %}
-
+    <hr />
+    <br />
+    <div class="row">
     {% if orders %}
     <h2>Orders: </h2>
-    <ul>
     {% for order in orders %}
-
+    <!--
     <li><h4>{{order.course.name}} - {{order.order_date}}</h4>
     
     </li>
-
+    -->
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-header">
+              Order: {{order.pk}}
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{order.course.name}}</h5>
+              <p class="card-text">{{order.order_date}}</p>
+              <p class="card-text">Price: ${{order.course.price}}</p>
+            </div>
+            <div class="card-footer text-muted">
+                Order Status: {{order.get_order_status_verbose}}
+            </div>
+          </div>
+    </div>
     {% endfor %}
-    </ul>
-    {% endif %}
 
+    {% endif %}
+    </div>
+    <hr />
+    <br />
     {% if topics %}
     <h2>Topics Interested In: </h2>
     <ul>
@@ -39,14 +63,19 @@
 
     {% endfor %}
     </ul>
-    {% endif %}
 
-    <h2>Set or Update Profile Picture: </h2>
+    <hr />
+    <br />
+
+    <h2>Update Profile </h2>
     <form action="{% url 'myapp:myaccount' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit">
+        {{form| crispy}}
+        <input class="btn btn-primary" type="submit" />
     </form>
+    {% endif %}
+
+    
     
 {#    <p><a href="{% url 'myapp:index' %}">Go Back</a></p> #}
 {% endblock %}

@@ -7,19 +7,33 @@
         <h2>{{error_message}}</h2>
 
     {% else %}
-        <h2>{{request.user.username}}'s orders: </h2>
-        <ul>
-            {% for order in orders %} 
-                <li>
-                    <h3>Order Id: {{order.pk}}</h3>
-                    <p>
-                        <h4>Course: {{order.course.name}}</h4>
-                        <h4>Order Placed On: {{order.order_date}}</h4>
-                        <h4>Order Status: {{order.get_order_status_verbose}}</h4>
-                    </p>
+        <h2 align="center">{{request.user.first_name}}'s orders: </h2>
+            <div class="row">
+                    {% if orders %}
 
-                </li>  
-            {% endfor %}
-        </ul>
+                    {% for order in orders %}  
+
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-header">
+                                  Order: {{order.pk}}
+                                </div>
+                                <div class="card-body">
+                                  <h5 class="card-title">{{order.course.name}}</h5>
+                                  <p class="card-text">{{order.order_date}}</p>
+                                  <p class="card-text">Price: ${{order.course.price}}</p>
+                                </div>
+                                <div class="card-footer text-muted">
+                                    Order Status: {{order.get_order_status_verbose}}
+                                </div>
+                              </div>
+                        </div>
+
+                    {% endfor %}
+                    {% else %}
+                    <h3 align="center">You have not placed any order</h3>
+                    {% endif %}
+
+            </div>
     {% endif %}
 {% endblock %}

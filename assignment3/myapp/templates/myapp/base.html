@@ -55,6 +55,12 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'myapp:place_order' %}">Place Order</a>
           </li>
+
+          {% if request.user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'myapp:myorders' %}">My Orders</a>
+            </li>
+          {% endif %}
           
         </ul>
         <div class="d-flex">
