@@ -59,6 +59,7 @@ def place_order(request):
         form = OrderForm()
     return render(request, 'myapp/place_order.html', {'form': form, 'msg': msg, 'courlist': all_courses})
 
+@login_required(login_url='/myapp/login/')
 def course_detail(request, cour_id):
     msg = ''
     course = get_object_or_404(Course, pk=cour_id)
@@ -146,6 +147,8 @@ def myaccount(request):
         is_student = True
         orders = Order.objects.filter(student=user[0])
         topics = Student.objects.get(username=username).interested_in.values()
+        if len(topics) == 0:
+            topics = []
         profile_picture_upload_form = ProfilePictureUploadForm(instance=user[0])
         #print(orders)    
         #print(topics)

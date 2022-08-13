@@ -24,6 +24,7 @@ def apply_discount(modeladmin, request, queryset):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
+    list_display = ('name','price')
     actions = [apply_discount]
 
 
